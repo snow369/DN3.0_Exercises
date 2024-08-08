@@ -1,0 +1,71 @@
+# Expected Outputs for REST API Interactions
+
+1. **Starting the Spring Boot Application**
+   Command: 
+   $ mvn spring-boot:run
+   Expected Outcome:
+   The application starts, and the server runs on http://localhost:8080.
+   Logs indicate the application is up and running.
+
+2. **GET /books**
+   Command:
+   GET /books
+   Expected Response:
+   [
+     {
+       "id": 1,
+       "title": "The Great Gatsby",
+       "author": "F. Scott Fitzgerald"
+     },
+     {
+       "id": 2,
+       "title": "1984",
+       "author": "George Orwell"
+     }
+   ]
+
+3. **POST /books**
+   Command:
+   POST /books
+   Request Body:
+   {
+     "title": "The Great Gatsby",
+     "author": "F. Scott Fitzgerald"
+   }
+   Expected Response:
+   {
+     "id": 3,
+     "title": "The Great Gatsby",
+     "author": "F. Scott Fitzgerald"
+   }
+
+4. **GET /books/{id}**
+   Command:
+   GET /books/{id}
+   Expected Response:
+   {
+     "id": 1,
+     "title": "The Great Gatsby",
+     "author": "F. Scott Fitzgerald"
+   }
+
+5. **PUT /books/{id}**
+   Command:
+   PUT /books/{id}
+   Request Body:
+   {
+     "title": "The Great Gatsby",
+     "author": "Francis Scott Fitzgerald"
+   }
+   Expected Response:
+   {
+     "id": 1,
+     "title": "The Great Gatsby",
+     "author": "Francis Scott Fitzgerald"
+   }
+
+6. **DELETE /books/{id}**
+   Command:
+   DELETE /books/{id}
+   Expected Response:
+   HTTP Status Code: 204 No Content
