@@ -8,40 +8,32 @@ CREATE OR REPLACE PROCEDURE SafeTransferFunds (
     v_from_balance NUMBER;
     v_to_balance NUMBER;
 BEGIN
-    -- Start a transaction
     BEGIN
-        -- Get the balance of the source account
         SELECT Balance INTO v_from_balance
         FROM Accounts
         WHERE AccountID = p_from_account;
         
-        -- Check if the source account has sufficient funds
         IF v_from_balance < p_amount THEN
             RAISE_APPLICATION_ERROR(-20001, 'Insufficient funds in the source account.');
         END IF;
         
-        -- Deduct the amount from the source account
         UPDATE Accounts
         SET Balance = Balance - p_amount
         WHERE AccountID = p_from_account;
         
-        -- Add the amount to the destination account
         UPDATE Accounts
         SET Balance = Balance + p_amount
         WHERE AccountID = p_to_account;
         
-        -- Commit the transaction
         COMMIT;
         
         DBMS_OUTPUT.PUT_LINE('Funds transferred successfully.');
         
     EXCEPTION
         WHEN NO_DATA_FOUND THEN
-            -- Handle case where account does not exist
             ROLLBACK;
             DBMS_OUTPUT.PUT_LINE('Error: One or both accounts do not exist.');
         WHEN OTHERS THEN
-            -- Handle other exceptions
             ROLLBACK;
             DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
     END;
@@ -59,30 +51,24 @@ CREATE OR REPLACE PROCEDURE UpdateSalary (
 ) IS
     v_current_salary NUMBER;
 BEGIN
-    -- Start a transaction
     BEGIN
-        -- Get the current salary of the employee
         SELECT Salary INTO v_current_salary
         FROM Employees
         WHERE EmployeeID = p_employee_id;
         
-        -- Update the salary with the given percentage
         UPDATE Employees
         SET Salary = Salary + (Salary * p_percentage / 100)
         WHERE EmployeeID = p_employee_id;
         
-        -- Commit the transaction
         COMMIT;
         
         DBMS_OUTPUT.PUT_LINE('Salary updated successfully.');
         
     EXCEPTION
         WHEN NO_DATA_FOUND THEN
-            -- Handle case where employee does not exist
             ROLLBACK;
             DBMS_OUTPUT.PUT_LINE('Error: Employee with ID ' || p_employee_id || ' does not exist.');
         WHEN OTHERS THEN
-            -- Handle other exceptions
             ROLLBACK;
             DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
     END;
@@ -105,24 +91,19 @@ CREATE OR REPLACE PROCEDURE AddNewCustomer (
     p_balance IN NUMBER
 ) IS
 BEGIN
-    -- Start a transaction
     BEGIN
-        -- Insert a new customer
         INSERT INTO Customers (CustomerID, Name, DOB, Balance, LastModified)
         VALUES (p_customer_id, p_name, p_dob, p_balance, SYSDATE);
         
-        -- Commit the transaction
         COMMIT;
         
         DBMS_OUTPUT.PUT_LINE('Customer added successfully.');
         
     EXCEPTION
         WHEN DUP_VAL_ON_INDEX THEN
-            -- Handle case where customer ID already exists
             ROLLBACK;
             DBMS_OUTPUT.PUT_LINE('Error: Customer with ID ' || p_customer_id || ' already exists.');
         WHEN OTHERS THEN
-            -- Handle other exceptions
             ROLLBACK;
             DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
     END;
